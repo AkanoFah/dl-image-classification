@@ -167,20 +167,7 @@ model.eval()
 
 Here, `device` should be set to the available execution device, such as a GPU or CPU.
 
-### 11. Reproducibility
-
-To reproduce the experiment:
-
-1. Open the notebook in Google Colab or another Python environment.
-2. Install PyTorch and Torchvision if they are not already available.
-3. Set the random seed to `0`.
-4. Run the notebook cells in order.
-5. Use the same data split, preprocessing, model configuration, and training settings.
-6. Save the trained weights and configuration if they are needed later.
-
-GPU availability and software versions may cause small differences in the results.
-
-## 12. Installation & Reproduction
+## 11. Installation & Reproduction
 
 ### Requirements
 
@@ -200,11 +187,11 @@ python -m pip install -r requirements.txt
 
 ### Run the Notebook
 
-Open `cifar10_cnn.ipynb` in Jupyter Notebook or Google Colab and run the cells in order.
+Open `cifar10_cnn.ipynb` in Google Colab or Jupyter Notebook and run the cells in order.
 
 The notebook covers dataset loading, preprocessing, model training, validation, learning curves, confusion matrix analysis, and final test evaluation.
 
-### Reproducibility
+### Training Configuration
 
 - Random seed: `0`
 - Batch size: `128`
@@ -213,7 +200,15 @@ The notebook covers dataset loading, preprocessing, model training, validation, 
 - Learning rate: `0.001`
 - Loss function: Cross-Entropy Loss
 
-The CIFAR-10 dataset is downloaded automatically by `torchvision` when required. For reliable evaluation, use the existing train/validation/test split and do not tune the model using test-set results.
+The CIFAR-10 dataset is downloaded automatically through `torchvision` when required. Use the existing training, validation, and test split to reproduce the experiment.
+
+For reliable evaluation, do not use test-set results to select or tune hyperparameters. Results may vary slightly depending on software versions and hardware.
+
+### Model Weights
+
+The trained model weights (`best_model.pth`) and configuration file (`best_model_config.json`) are not included in this repository. Run the notebook to train the model and generate the files when needed.
+
+The selected model uses a CNN with 10 output classes and a dropout probability of `0.0`. To load saved weights, recreate the same model architecture and configuration before loading the state dictionary.
 
 ---
 
@@ -383,30 +378,17 @@ model.eval()
 
 ตัวแปร `device` ต้องกำหนดให้เป็นอุปกรณ์ที่ใช้รัน เช่น GPU หรือ CPU
 
-### 11. การทำซ้ำการทดลอง
-
-ขั้นตอนสำหรับทดลองซ้ำมีดังนี้
-
-1. เปิด Notebook ใน Google Colab หรือสภาพแวดล้อม Python อื่น
-2. ติดตั้ง PyTorch และ Torchvision หากยังไม่มี
-3. กำหนด Random seed เป็น `0`
-4. รันเซลล์ใน Notebook ตามลำดับ
-5. ใช้การแบ่งข้อมูล การเตรียมข้อมูล สถาปัตยกรรมโมเดล และการตั้งค่าการฝึกแบบเดียวกัน
-6. บันทึกน้ำหนักและ Configuration หากต้องการนำโมเดลกลับมาใช้ภายหลัง
-
-ผลลัพธ์อาจแตกต่างกันเล็กน้อยตาม GPU และเวอร์ชันของซอฟต์แวร์ที่ใช้
-
-## 12. การติดตั้งและการทำซ้ำการทดลอง (Installation & Reproduction)
+## 11. การติดตั้งและการทำซ้ำการทดลอง
 
 ### สิ่งที่ต้องมี
 
-- Python 3.10 ขึ้นไป
+- Python เวอร์ชัน 3.10 ขึ้นไป
 - Git
 - ไลบรารีที่ระบุไว้ในไฟล์ `requirements.txt`
 
 ### การติดตั้ง
 
-เปิด Terminal หรือ Command Prompt แล้วรันคำสั่งต่อไปนี้
+โคลน Repository และติดตั้งไลบรารีที่จำเป็นด้วยคำสั่งต่อไปนี้
 
 ```bash
 git clone https://github.com/AkanoFah/dl-image-classification.git
@@ -414,15 +396,13 @@ cd dl-image-classification
 python -m pip install -r requirements.txt
 ```
 
-### วิธีเรียกใช้งาน
+### วิธีเรียกใช้งาน Notebook
 
-เปิดไฟล์ `cifar10_cnn.ipynb` ด้วย Jupyter Notebook หรือ Google Colab แล้วเรียกใช้งานเซลล์ตามลำดับตั้งแต่ต้นจนจบ
+เปิดไฟล์ `cifar10_cnn.ipynb` ด้วย Google Colab หรือ Jupyter Notebook แล้วเรียกใช้งานเซลล์ตามลำดับ
 
-ภายใน Notebook ประกอบด้วยขั้นตอนการโหลดและเตรียมข้อมูล การฝึกโมเดล การประเมินผล การแสดงกราฟการเรียนรู้ Confusion Matrix และการทดสอบโมเดล
+Notebook ครอบคลุมการโหลดและเตรียมข้อมูล การฝึกโมเดล การประเมินผล Validation การแสดง Learning Curves และ Confusion Matrix รวมถึงการประเมินผลขั้นสุดท้ายบนชุดข้อมูล Test
 
-### การทำซ้ำการทดลอง
-
-กำหนดค่าหลักที่ใช้ในการทดลองดังนี้
+### การตั้งค่าการฝึกโมเดล
 
 - Random Seed: `0`
 - Batch Size: `128`
@@ -431,6 +411,12 @@ python -m pip install -r requirements.txt
 - Learning Rate: `0.001`
 - Loss Function: Cross-Entropy Loss
 
-ระบบจะดาวน์โหลดชุดข้อมูล CIFAR-10 ผ่าน `torchvision` โดยอัตโนมัติเมื่อจำเป็น
+ระบบจะดาวน์โหลดชุดข้อมูล CIFAR-10 ผ่าน `torchvision` โดยอัตโนมัติเมื่อจำเป็น ควรใช้การแบ่งชุดข้อมูล Training, Validation และ Test ตามที่กำหนดไว้ เพื่อให้สามารถทำซ้ำการทดลองได้อย่างเหมาะสม
 
-เพื่อให้การประเมินผลมีความน่าเชื่อถือ ควรใช้ชุดข้อมูล Train, Validation และ Test ตามที่กำหนดไว้ และไม่ใช้ผลจากชุด Test ในการปรับแต่งโมเดล
+ห้ามใช้ผลจากชุดข้อมูล Test ในการเลือกหรือปรับแต่ง Hyperparameters เพื่อป้องกันข้อมูลรั่วไหลในการประเมินผล ทั้งนี้ ผลลัพธ์อาจแตกต่างกันเล็กน้อยตามเวอร์ชันซอฟต์แวร์และอุปกรณ์ที่ใช้ประมวลผล
+
+### ไฟล์น้ำหนักโมเดล
+
+Repository นี้ **ไม่ได้รวมไฟล์น้ำหนักโมเดล `best_model.pth` และไฟล์การตั้งค่า `best_model_config.json`** ผู้ใช้ต้องเรียกใช้งาน Notebook เพื่อฝึกโมเดลและสร้างไฟล์ดังกล่าวเมื่อต้องการใช้งาน
+
+โมเดลที่เลือกใช้มีเอาต์พุต 10 คลาส และกำหนดค่า Dropout เป็น `0.0` หากต้องการโหลดน้ำหนักโมเดลที่บันทึกไว้ ต้องสร้างสถาปัตยกรรมและการตั้งค่าของโมเดลให้ตรงกับโมเดลเดิมก่อน
