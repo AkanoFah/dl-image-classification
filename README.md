@@ -56,9 +56,9 @@ Results will be reported after the experiments have been completed. No performan
 ### 6. Project Status
 
 - [x] Create the GitHub repository.
-- [ ] Prepare and explore the dataset.
-- [ ] Train the baseline CNN.
-- [ ] Run hyperparameter experiments.
+- [x] Prepare and explore the dataset.
+- [x] Train the baseline CNN.
+- [x] Run hyperparameter experiments.
 - [ ] Evaluate the selected model on the test set.
 - [ ] Document results and limitations.
 - [ ] Complete the project report and demonstration.
@@ -125,9 +125,9 @@ CIFAR-10 ประกอบด้วยรูปภาพสีจำนวน 6
 ### 6. สถานะโครงงาน
 
 - [x] สร้าง GitHub Repository
-- [ ] เตรียมและสำรวจชุดข้อมูล
-- [ ] ฝึกสอน CNN Baseline
-- [ ] ทดลองปรับ Hyperparameters
+- [x] เตรียมและสำรวจชุดข้อมูล
+- [x] ฝึกสอน CNN Baseline
+- [x] ทดลองปรับ Hyperparameters
 - [ ] ประเมินโมเดลที่เลือกด้วยชุด Test
 - [ ] บันทึกผลการทดลองและข้อจำกัด
 - [ ] จัดทำรายงานและการสาธิตโครงงาน
