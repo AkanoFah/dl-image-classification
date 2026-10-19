@@ -107,7 +107,7 @@ The baseline and experimental models use the same dataset split, batch size, lea
 
 ### 8. Experimental Results
 
-Two experiments were conducted to examine the effects of weight decay and dropout.
+Three model configurations were compared to examine the effects of weight decay and dropout.
 
 | Experiment | Dropout | Weight decay | Train accuracy | Validation accuracy | Train–validation gap |
 |---|---:|---:|---:|---:|---:|
@@ -179,19 +179,6 @@ To reproduce the experiment:
 6. Save the trained weights and configuration if they are needed later.
 
 GPU availability and software versions may cause small differences in the results.
-
-### 12. Project Status
-
-- [x] Load and preprocess the CIFAR-10 dataset
-- [x] Implement the CNN architecture
-- [x] Train the baseline model
-- [x] Run weight decay and dropout experiments
-- [x] Select a model using validation performance
-- [x] Evaluate the selected model on the test set
-- [x] Exceed the target test accuracy of 65%
-- [ ] Upload saved model files to GitHub, if distribution is required
-- [ ] Prepare the final report and project demonstration, if required by the assignment
-
 
 ---
 
@@ -300,7 +287,8 @@ GPU availability and software versions may cause small differences in the result
 
 ### 8. ผลการทดลอง
 
-มีการทดลอง 2 รูปแบบ เพื่อศึกษาผลของ Weight Decay และ Dropout
+เปรียบเทียบการตั้งค่าโมเดล 3 รูปแบบ
+เพื่อศึกษาผลของ Weight Decay และ Dropout
 
 | การทดลอง | Dropout | Weight decay | Train accuracy | Validation accuracy | Train–validation gap |
 |---|---:|---:|---:|---:|---:|
@@ -373,14 +361,3 @@ model.eval()
 
 ผลลัพธ์อาจแตกต่างกันเล็กน้อยตาม GPU และเวอร์ชันของซอฟต์แวร์ที่ใช้
 
-### 12. สถานะโครงงาน
-
-- [x] โหลดและเตรียมชุดข้อมูล CIFAR-10
-- [x] สร้างสถาปัตยกรรม CNN
-- [x] ฝึกโมเดล Baseline
-- [x] ทดลองปรับ Weight Decay และ Dropout
-- [x] เลือกโมเดลจากผล Validation
-- [x] ประเมินโมเดลที่เลือกด้วยชุดข้อมูล Test
-- [x] ทำ Test accuracy ได้สูงกว่าเป้าหมาย 65%
-- [ ] อัปโหลดไฟล์โมเดลไปยัง GitHub หากต้องการเผยแพร่
-- [ ] จัดทำรายงานฉบับสมบูรณ์และสาธิตโครงงาน หากเป็นข้อกำหนดของงาน
