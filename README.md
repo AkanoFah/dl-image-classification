@@ -180,6 +180,41 @@ To reproduce the experiment:
 
 GPU availability and software versions may cause small differences in the results.
 
+## 12. Installation & Reproduction
+
+### Requirements
+
+- Python 3.10 or later
+- Git
+- Dependencies listed in `requirements.txt`
+
+### Installation
+
+Clone the repository and install the required dependencies:
+
+```bash
+git clone https://github.com/AkanoFah/dl-image-classification.git
+cd dl-image-classification
+python -m pip install -r requirements.txt
+```
+
+### Run the Notebook
+
+Open `cifar10_cnn.ipynb` in Jupyter Notebook or Google Colab and run the cells in order.
+
+The notebook covers dataset loading, preprocessing, model training, validation, learning curves, confusion matrix analysis, and final test evaluation.
+
+### Reproducibility
+
+- Random seed: `0`
+- Batch size: `128`
+- Epochs: `15`
+- Optimizer: Adam
+- Learning rate: `0.001`
+- Loss function: Cross-Entropy Loss
+
+The CIFAR-10 dataset is downloaded automatically by `torchvision` when required. For reliable evaluation, use the existing train/validation/test split and do not tune the model using test-set results.
+
 ---
 
 ## ภาษาไทย
@@ -361,3 +396,41 @@ model.eval()
 
 ผลลัพธ์อาจแตกต่างกันเล็กน้อยตาม GPU และเวอร์ชันของซอฟต์แวร์ที่ใช้
 
+## 12. การติดตั้งและการทำซ้ำการทดลอง (Installation & Reproduction)
+
+### สิ่งที่ต้องมี
+
+- Python 3.10 ขึ้นไป
+- Git
+- ไลบรารีที่ระบุไว้ในไฟล์ `requirements.txt`
+
+### การติดตั้ง
+
+เปิด Terminal หรือ Command Prompt แล้วรันคำสั่งต่อไปนี้
+
+```bash
+git clone https://github.com/AkanoFah/dl-image-classification.git
+cd dl-image-classification
+python -m pip install -r requirements.txt
+```
+
+### วิธีเรียกใช้งาน
+
+เปิดไฟล์ `cifar10_cnn.ipynb` ด้วย Jupyter Notebook หรือ Google Colab แล้วเรียกใช้งานเซลล์ตามลำดับตั้งแต่ต้นจนจบ
+
+ภายใน Notebook ประกอบด้วยขั้นตอนการโหลดและเตรียมข้อมูล การฝึกโมเดล การประเมินผล การแสดงกราฟการเรียนรู้ Confusion Matrix และการทดสอบโมเดล
+
+### การทำซ้ำการทดลอง
+
+กำหนดค่าหลักที่ใช้ในการทดลองดังนี้
+
+- Random Seed: `0`
+- Batch Size: `128`
+- จำนวน Epochs: `15`
+- Optimizer: Adam
+- Learning Rate: `0.001`
+- Loss Function: Cross-Entropy Loss
+
+ระบบจะดาวน์โหลดชุดข้อมูล CIFAR-10 ผ่าน `torchvision` โดยอัตโนมัติเมื่อจำเป็น
+
+เพื่อให้การประเมินผลมีความน่าเชื่อถือ ควรใช้ชุดข้อมูล Train, Validation และ Test ตามที่กำหนดไว้ และไม่ใช้ผลจากชุด Test ในการปรับแต่งโมเดล
