@@ -1,0 +1,11 @@
+{
+    "experiment": "Dropout ablation",
+    "dropout": 0.0,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "epochs": 15,
+    "seed": 0,
+    "train_accuracy": 74.55,
+    "validation_accuracy": 75.25,
+    "best_epoch": 15
+}
