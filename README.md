@@ -1,190 +1,197 @@
 # Image Classification with CNN on CIFAR-10
 
-**Deep Learning Capstone Project | Track A**
+**Deep Learning Capstone Project**
 
 ## English
 
 ### 1. Project Overview
 
-This project trains a Convolutional Neural Network (CNN) to classify images from CIFAR-10 into 10 categories. The model is implemented in PyTorch and trained in Google Colab.
+This project builds and evaluates a Convolutional Neural Network (CNN) for image classification using the CIFAR-10 dataset. The model classifies 32 × 32 color images into 10 categories.
 
-The experiments compare different training configurations. Validation accuracy is used to select the model, and the selected checkpoint is evaluated on the official CIFAR-10 test set.
+The project covers data preprocessing, CNN implementation, model training, hyperparameter experiments, and evaluation on unseen test data.
 
-### 2. Objectives
+### 2. Project Objectives
 
-- Build an image classification model using PyTorch.
-- Track training and validation performance.
-- Compare training configurations, including dropout, learning rate, and weight decay.
-- Compare the CNN with a majority-class baseline.
-- Evaluate the selected model on the official test set.
-- Examine classification errors and document the model's limitations.
+- Build a CNN for multi-class image classification.
+- Apply image preprocessing and data augmentation.
+- Train and evaluate the model using PyTorch.
+- Compare model configurations by changing regularization settings.
+- Evaluate the final model against a majority-class baseline.
 
 ### 3. Dataset
 
-CIFAR-10 contains 60,000 color images, each measuring 32 × 32 pixels, across 10 classes.
+The project uses the CIFAR-10 dataset, which contains 60,000 color images across 10 classes.
 
-| Split | Number of images |
+| Dataset split | Number of images |
 |---|---:|
-| Training set | 40,000 |
-| Validation set | 10,000 |
-| Official test set | 10,000 |
+| Training | 40,000 |
+| Validation | 10,000 |
+| Test | 10,000 |
 | **Total** | **60,000** |
 
-The original 50,000-image training set was divided into training and validation subsets using a fixed random seed (`SEED = 0`). The official test set was kept separate during training and model selection.
+The original 50,000-image training set is split into 40,000 training images and 10,000 validation images. The official 10,000-image test set is reserved for final evaluation.
 
 The 10 classes are:
 
-`airplane`, `automobile`, `bird`, `cat`, `deer`, `dog`, `frog`, `horse`, `ship`, and `truck`.
+- Airplane
+- Automobile
+- Bird
+- Cat
+- Deer
+- Dog
+- Frog
+- Horse
+- Ship
+- Truck
 
-#### Preprocessing and Data Augmentation
+### 4. Data Preprocessing
 
-- Convert images to PyTorch tensors.
-- Normalize images using CIFAR-10 channel statistics.
-- Apply random horizontal flips and random crops with padding during training.
-- Apply normalization without random augmentation during validation and testing.
+All images are converted to tensors and normalized. Training images also use data augmentation to improve generalization.
 
-### 4. Model and Technologies
+**Training transformations**
+- Random horizontal flip
+- Random crop to 32 × 32 pixels with padding of 4 pixels
+- Tensor conversion
+- Normalization
 
-- **Model:** Custom Convolutional Neural Network (CNN)
-- **Framework:** PyTorch
-- **Language:** Python
-- **Environment:** Google Colab
-- **Hardware acceleration:** GPU when available
-- **Loss function:** Cross-Entropy Loss
-- **Optimizer:** Adam
+**Validation and test transformations**
+- Tensor conversion
+- Normalization
 
-#### CNN Architecture
+Validation and test images do not use random augmentation.
+
+### 5. Model Architecture
+
+The CNN contains two convolutional blocks followed by fully connected layers.
 
 | Layer | Configuration |
 |---|---|
-| Convolutional layer 1 | 3 → 32 channels, 3 × 3 kernel, ReLU |
-| Max pooling 1 | 2 × 2 |
-| Convolutional layer 2 | 32 → 64 channels, 3 × 3 kernel, ReLU |
-| Max pooling 2 | 2 × 2 |
+| Convolution 1 | 3 input channels → 32 output channels, kernel size 3 |
+| Activation | ReLU |
+| Pooling 1 | Max pooling, 2 × 2 |
+| Convolution 2 | 32 input channels → 64 output channels, kernel size 3 |
+| Activation | ReLU |
+| Pooling 2 | Max pooling, 2 × 2 |
 | Flatten | 64 × 8 × 8 features |
-| Fully connected layer | 4096 → 128, ReLU |
-| Dropout | 0.25 |
+| Fully connected 1 | 4096 → 128 |
+| Activation | ReLU |
+| Dropout | Configurable dropout probability |
 | Output layer | 128 → 10 classes |
 
-The model has approximately 545,098 trainable parameters.
+The model has **545,098 trainable parameters**.
 
-#### Training Configuration
+### 6. Technologies
+
+- Python
+- PyTorch
+- Torchvision
+- NumPy
+- Matplotlib
+- Google Colab
+- CIFAR-10
+
+### 7. Training Configuration
 
 | Parameter | Value |
 |---|---|
+| Random seed | 0 |
 | Batch size | 128 |
+| Optimizer | Adam |
 | Learning rate | 0.001 |
-| Weight decay | 0.0001 |
-| Dropout probability | 0.25 |
+| Loss function | Cross-Entropy Loss |
 | Epochs | 15 |
-| Random seed | 0, set in the notebook |
-| Model selection | Best validation accuracy |
+| Baseline dropout | 0.25 |
+| Baseline weight decay | 0.0001 |
 
-### 5. Experimental Results and Evaluation
+The baseline and experimental models use the same dataset split, batch size, learning rate, optimizer, and number of epochs to make their validation results easier to compare.
 
-#### 5.1 Hyperparameter Experiments
+### 8. Experimental Results
 
-The experiments examined different training-set sizes, dropout probabilities, learning rates, and weight-decay settings.
+Two experiments were conducted to examine the effects of weight decay and dropout.
 
-| Experiment | Configuration | Validation accuracy |
-|---|---|---:|
-| Initial baseline | 8,000 training images, 8 epochs, dropout 0.25, LR 0.001, WD 0.0001 | 56.50% |
-| Dropout experiment | 8,000 training images, dropout 0.5, 8 epochs | 51.65% |
-| Learning-rate experiment | 8,000 training images, LR 0.003, 8 epochs | 54.60% |
-| Expanded baseline | 40,000 training images, 8 epochs | 70.31% |
-| Dropout ablation | Dropout 0.0, 40,000 training images, 15 epochs | 75.15% |
-| Weight-decay ablation | Weight decay 0.0, 40,000 training images, 15 epochs | 74.29% |
-| Selected checkpoint run | Dropout 0.25, LR 0.001, WD 0.0001, 40,000 training images, 15 epochs | 72.83% |
+| Experiment | Dropout | Weight decay | Train accuracy | Validation accuracy | Train–validation gap |
+|---|---:|---:|---:|---:|---:|
+| Baseline | 0.25 | 0.0001 | 72.77% | 73.97% | -1.20 pp |
+| Weight decay removed | 0.25 | 0.0 | 72.66% | 73.81% | -1.15 pp |
+| Dropout removed | 0.0 | 0.0001 | 74.55% | 75.25% | -0.70 pp |
 
-The initial experiments used 8,000 training images. Later experiments used 40,000, so results across these groups cannot be used to isolate the effect of a single hyperparameter.
+*Train–validation gap = training accuracy − validation accuracy. Values are reported in percentage points (pp).*
 
-A separate 15-epoch run reached 76.17% validation accuracy at epoch 12. Its best-epoch weights were not saved, so that result was not used for the final test evaluation. A subsequent run produced the checkpoint used in this project, with a best validation accuracy of 72.83% at epoch 15.
+The model without dropout achieved the highest validation accuracy among the tested configurations, reaching **75.25%**. Removing weight decay produced a slightly lower validation accuracy than the baseline.
 
-The dropout and weight-decay experiments produced different validation results, but each configuration was tested in an individual run. Further controlled experiments would be needed to determine whether these differences are consistent.
+These results apply to the configurations tested in this project; they do not establish that removing dropout will improve every CNN.
 
-#### 5.2 Final Test Evaluation
+### 9. Final Test Evaluation
 
-The selected checkpoint was evaluated on the official CIFAR-10 test set.
+The model selected using validation performance was evaluated on the official CIFAR-10 test set.
 
 | Metric | Result |
 |---|---:|
-| Best validation accuracy | 72.83% |
-| **Final test accuracy** | **72.49%** |
-| Final test loss | 0.785 |
+| Test loss | 0.736 |
+| Test accuracy | 74.73% |
 | Majority-class baseline accuracy | 10.00% |
+| Target test accuracy | Above 65% |
+| Target achieved | Yes |
 
-The model achieved **72.49% test accuracy**, exceeding the project target of 65%. Its test accuracy was 0.34 percentage points lower than its best validation accuracy.
+The final model achieved **74.73% test accuracy**, exceeding the project's target of 65%.
 
-The majority-class baseline achieved 10.00% accuracy. CIFAR-10 has ten balanced classes, so always predicting one class provides a simple baseline for comparison.
+The majority-class baseline predicts the same most frequent class for every image. Since CIFAR-10 has 10 equally sized classes, this baseline achieves 10% accuracy.
 
-#### 5.3 Per-Class Recall and Error Analysis
+### 10. Saved Model Files
 
-The following recall values were calculated on the validation set.
+The following files can be saved after training:
 
-| Class | Validation recall |
-|---|---:|
-| Frog | 89.44% |
-| Automobile | 89.13% |
-| Ship | 84.74% |
-| Horse | 82.61% |
-| Truck | 80.81% |
-| Airplane | 76.68% |
-| Dog | 67.78% |
-| Deer | 58.79% |
-| Bird | 57.91% |
-| Cat | 40.29% |
+| File | Description |
+|---|---|
+| `best_model.pth` | Trained model weights |
+| `best_model_config.json` | Model configuration and recorded experiment metrics |
 
-The model performed best on frog and automobile images. Cat had the lowest recall, followed by bird and deer.
+Save the selected model weights with:
 
-The confusion matrix shows that cat images were frequently misclassified as dog (269 images) or frog (165 images). Deer images were sometimes classified as frog (125 images) or horse (109 images). These errors suggest that the model has difficulty distinguishing some classes with similar visual features.
+```python
+torch.save(model_exp2.state_dict(), "best_model.pth")
+```
 
-The current CNN may benefit from additional convolutional layers or other changes to its feature extraction process.
+The configuration file can be saved separately as JSON. These files must be uploaded to the repository or distributed separately if others need to download them. Their presence in the local Colab session does not automatically add them to GitHub.
 
-**Note:** These per-class recall values and confusion-matrix observations come from the validation set, not the official test set.
+To load the saved weights, first recreate the same CNN architecture with the same configuration:
 
-### 6. Project Status
+```python
+model = CNN(n_classes=10, p_drop=0.0)
+model.load_state_dict(
+    torch.load("best_model.pth", map_location=device)
+)
+model = model.to(device)
+model.eval()
+```
 
-- [x] Create the GitHub repository.
-- [x] Prepare and explore CIFAR-10.
-- [x] Implement and train the baseline CNN.
-- [x] Run hyperparameter experiments.
-- [x] Select a checkpoint using validation accuracy.
-- [x] Evaluate the selected checkpoint on the official test set.
-- [x] Record evaluation results and analyze validation errors.
-- [ ] Complete the final PDF report.
-- [ ] Complete the project demonstration or video.
-- [ ] Check that the repository contains all required files and instructions.
+Here, `device` should be set to the available execution device, such as a GPU or CPU.
 
-### 7. Reproducibility
+### 11. Reproducibility
 
-The project was developed in Google Colab using Python, PyTorch, and torchvision.
+To reproduce the experiment:
 
-#### Running the Project
+1. Open the notebook in Google Colab or another Python environment.
+2. Install PyTorch and Torchvision if they are not already available.
+3. Set the random seed to `0`.
+4. Run the notebook cells in order.
+5. Use the same data split, preprocessing, model configuration, and training settings.
+6. Save the trained weights and configuration if they are needed later.
 
-1. Open the project notebook in Google Colab.
-2. Run the dataset setup and preprocessing cells.
-3. Train the CNN using the documented configuration.
-4. Compare experiments using the validation set.
-5. Load the selected checkpoint.
-6. Evaluate the model on the official test set.
+GPU availability and software versions may cause small differences in the results.
 
-The CIFAR-10 dataset can be downloaded through `torchvision.datasets.CIFAR10`.
+### 12. Project Status
 
-The notebook contains the model definition, data split, training procedure, evaluation functions, and plotting code. To reproduce an experiment, keep the data split, random seed, model configuration, and training settings consistent. GPU execution and random operations may still cause small differences between runs.
+- [x] Load and preprocess the CIFAR-10 dataset
+- [x] Implement the CNN architecture
+- [x] Train the baseline model
+- [x] Run weight decay and dropout experiments
+- [x] Select a model using validation performance
+- [x] Evaluate the selected model on the test set
+- [x] Exceed the target test accuracy of 65%
+- [ ] Upload saved model files to GitHub, if distribution is required
+- [ ] Prepare the final report and project demonstration, if required by the assignment
 
-The `best_model.pth` file stores the selected model weights. It must be loaded into the matching CNN architecture before evaluation or inference.
-
-The notebook and checkpoint should be made available in the repository or through documented download links. A file saved in a Colab runtime is not automatically accessible to other users.
-
-### 8. Limitations and Future Work
-
-- The CNN has a relatively simple architecture and struggles with some visually similar classes.
-- Cat, bird, and deer have lower validation recall than the other classes.
-- The initial and expanded experiments used different training-set sizes, limiting direct comparisons.
-- Most configurations were tested only once.
-- The model has not been compared with a deeper CNN architecture.
-
-Future experiments could add batch normalization, use more convolutional blocks, apply learning-rate scheduling, and compare regularization settings under the same data split. Repeating experiments with multiple random seeds would also help establish whether the observed differences are consistent.
 
 ---
 
@@ -192,188 +199,188 @@ Future experiments could add batch normalization, use more convolutional blocks,
 
 ### 1. ภาพรวมโครงงาน
 
-โครงงานนี้พัฒนาและฝึกสอนโมเดล Convolutional Neural Network (CNN) เพื่อจำแนกรูปภาพจากชุดข้อมูล CIFAR-10 ออกเป็น 10 ประเภท โดยใช้ PyTorch บน Google Colab
+โครงงานนี้เป็นการสร้างและประเมินโมเดล Convolutional Neural Network (CNN) สำหรับจำแนกภาพจากชุดข้อมูล CIFAR-10 โดยโมเดลจะจำแนกภาพสีขนาด 32 × 32 พิกเซล ออกเป็น 10 คลาส
 
-การทดลองศึกษาผลของการตั้งค่าการฝึกสอนที่แตกต่างกัน โดยใช้ Validation Accuracy ในการเลือกโมเดล และใช้ชุด Test อย่างเป็นทางการของ CIFAR-10 ในการประเมินผลขั้นสุดท้าย
+เนื้อหาครอบคลุมการเตรียมข้อมูล การสร้าง CNN การฝึกโมเดล การทดลองปรับค่าพารามิเตอร์ และการประเมินผลด้วยชุดข้อมูลทดสอบ
 
 ### 2. วัตถุประสงค์
 
-- สร้างโมเดลจำแนกรูปภาพด้วย PyTorch
-- ติดตามผลการฝึกและผล Validation
-- เปรียบเทียบการตั้งค่า Dropout, Learning Rate และ Weight Decay
-- เปรียบเทียบ CNN กับ Majority-class Baseline
-- ประเมินโมเดลที่เลือกด้วยชุด Test อย่างเป็นทางการ
-- วิเคราะห์ข้อผิดพลาดและระบุข้อจำกัดของโมเดล
+- สร้างโมเดล CNN สำหรับจำแนกภาพหลายคลาส
+- เรียนรู้การเตรียมข้อมูลและการทำ Data Augmentation
+- ฝึกและประเมินโมเดลด้วย PyTorch
+- เปรียบเทียบโมเดลโดยปรับการตั้งค่าด้าน Regularization
+- ประเมินโมเดลสุดท้ายเทียบกับ Majority-class Baseline
 
 ### 3. ชุดข้อมูล
 
-CIFAR-10 ประกอบด้วยรูปภาพสี 60,000 ภาพ แต่ละภาพมีขนาด 32 × 32 พิกเซล แบ่งเป็น 10 คลาส
+โครงงานใช้ชุดข้อมูล CIFAR-10 ซึ่งประกอบด้วยภาพสีทั้งหมด 60,000 ภาพ แบ่งเป็น 10 คลาส
 
 | ชุดข้อมูล | จำนวนภาพ |
 |---|---:|
-| Training set | 40,000 |
-| Validation set | 10,000 |
-| Official test set | 10,000 |
+| Training | 40,000 |
+| Validation | 10,000 |
+| Test | 10,000 |
 | **รวม** | **60,000** |
 
-Training set เดิมจำนวน 50,000 ภาพถูกแบ่งเป็น Training และ Validation โดยใช้ Random Seed คงที่ (`SEED = 0`) ส่วน Test Set ถูกแยกออกจากการฝึกและการเลือกโมเดล
+ข้อมูล Training เดิมจำนวน 50,000 ภาพถูกแบ่งเป็น Training 40,000 ภาพ และ Validation 10,000 ภาพ ส่วน Test ใช้ชุดข้อมูลทดสอบอย่างเป็นทางการจำนวน 10,000 ภาพ เพื่อประเมินผลขั้นสุดท้าย
 
-คลาสทั้ง 10 ประเภท ได้แก่
+คลาสทั้ง 10 ได้แก่
 
-`airplane` (เครื่องบิน), `automobile` (รถยนต์), `bird` (นก), `cat` (แมว), `deer` (กวาง), `dog` (สุนัข), `frog` (กบ), `horse` (ม้า), `ship` (เรือ) และ `truck` (รถบรรทุก)
+- เครื่องบิน (Airplane)
+- รถยนต์ (Automobile)
+- นก (Bird)
+- แมว (Cat)
+- กวาง (Deer)
+- สุนัข (Dog)
+- กบ (Frog)
+- ม้า (Horse)
+- เรือ (Ship)
+- รถบรรทุก (Truck)
 
-#### การเตรียมข้อมูลและ Data Augmentation
+### 4. การเตรียมข้อมูล
 
-- แปลงรูปภาพเป็น PyTorch Tensor
-- Normalize ภาพด้วยค่าสถิติของแต่ละช่องสีจาก CIFAR-10
-- ใช้ Random Horizontal Flip ระหว่างการฝึก
-- ใช้ Random Crop พร้อม Padding ระหว่างการฝึก
-- ใช้ Normalize โดยไม่มี Random Augmentation กับชุด Validation และ Test
+ภาพทั้งหมดถูกแปลงเป็น Tensor และทำ Normalization ส่วนข้อมูล Training จะผ่าน Data Augmentation เพิ่มเติม เพื่อช่วยให้โมเดลเรียนรู้จากรูปแบบภาพที่หลากหลายขึ้น
 
-### 4. โมเดลและเทคโนโลยี
+**การแปลงข้อมูล Training**
+- สุ่มพลิกภาพในแนวนอน
+- สุ่ม Crop ภาพขนาด 32 × 32 พิกเซล โดยเพิ่ม Padding 4 พิกเซล
+- แปลงภาพเป็น Tensor
+- ทำ Normalization
 
-- **โมเดล:** Convolutional Neural Network (CNN) ที่ออกแบบขึ้นเอง
-- **เฟรมเวิร์ก:** PyTorch
-- **ภาษาโปรแกรม:** Python
-- **สภาพแวดล้อม:** Google Colab
-- **การเร่งความเร็ว:** GPU เมื่อพร้อมใช้งาน
-- **Loss Function:** Cross-Entropy Loss
-- **Optimizer:** Adam
+**การแปลงข้อมูล Validation และ Test**
+- แปลงภาพเป็น Tensor
+- ทำ Normalization
 
-#### สถาปัตยกรรม CNN
+ชุดข้อมูล Validation และ Test จะไม่ใช้ Random Augmentation เพื่อให้การประเมินผลไม่ขึ้นอยู่กับการสุ่มแปลงภาพ
+
+### 5. สถาปัตยกรรมโมเดล
+
+โมเดล CNN ประกอบด้วย Convolutional Block จำนวน 2 บล็อก ตามด้วย Fully Connected Layer
 
 | Layer | การตั้งค่า |
 |---|---|
-| Convolutional layer 1 | 3 → 32 Channels, Kernel 3 × 3, ReLU |
-| Max pooling 1 | 2 × 2 |
-| Convolutional layer 2 | 32 → 64 Channels, Kernel 3 × 3, ReLU |
-| Max pooling 2 | 2 × 2 |
+| Convolution 1 | 3 ช่องสัญญาณเข้า → 32 ช่องสัญญาณออก, Kernel size 3 |
+| Activation | ReLU |
+| Pooling 1 | Max Pooling ขนาด 2 × 2 |
+| Convolution 2 | 32 ช่องสัญญาณเข้า → 64 ช่องสัญญาณออก, Kernel size 3 |
+| Activation | ReLU |
+| Pooling 2 | Max Pooling ขนาด 2 × 2 |
 | Flatten | 64 × 8 × 8 Features |
-| Fully connected layer | 4096 → 128, ReLU |
-| Dropout | 0.25 |
-| Output layer | 128 → 10 Classes |
+| Fully Connected 1 | 4096 → 128 |
+| Activation | ReLU |
+| Dropout | ปรับค่า Dropout ได้ |
+| Output Layer | 128 → 10 คลาส |
 
-โมเดลมีพารามิเตอร์ที่สามารถฝึกได้ประมาณ 545,098 ตัว
+โมเดลมีพารามิเตอร์ที่สามารถฝึกได้ทั้งหมด **545,098 พารามิเตอร์**
 
-#### การตั้งค่าการฝึกสอน
+### 6. เทคโนโลยีที่ใช้
+
+- Python
+- PyTorch
+- Torchvision
+- NumPy
+- Matplotlib
+- Google Colab
+- CIFAR-10
+
+### 7. การตั้งค่าการฝึกโมเดล
 
 | พารามิเตอร์ | ค่า |
 |---|---|
+| Random seed | 0 |
 | Batch size | 128 |
+| Optimizer | Adam |
 | Learning rate | 0.001 |
-| Weight decay | 0.0001 |
-| Dropout probability | 0.25 |
+| Loss function | Cross-Entropy Loss |
 | จำนวน Epochs | 15 |
-| Random seed | 0 ซึ่งกำหนดไว้ใน Notebook |
-| เกณฑ์การเลือกโมเดล | Validation Accuracy สูงสุด |
+| Dropout ของ Baseline | 0.25 |
+| Weight decay ของ Baseline | 0.0001 |
 
-### 5. ผลการทดลองและการประเมินผล
+โมเดล Baseline และโมเดลที่ใช้ทดลองจะใช้การแบ่งชุดข้อมูล Batch size, Learning rate, Optimizer และจำนวน Epochs เดียวกัน เพื่อให้เปรียบเทียบผล Validation ได้ง่ายขึ้น
 
-#### 5.1 การทดลอง Hyperparameters
+### 8. ผลการทดลอง
 
-การทดลองเปรียบเทียบขนาดชุด Training, Dropout, Learning Rate และ Weight Decay
+มีการทดลอง 2 รูปแบบ เพื่อศึกษาผลของ Weight Decay และ Dropout
 
-| การทดลอง | การตั้งค่า | Validation Accuracy |
-|---|---|---:|
-| Baseline ชุดแรก | Training 8,000 ภาพ, 8 Epochs, Dropout 0.25, LR 0.001, WD 0.0001 | 56.50% |
-| ทดลอง Dropout | Training 8,000 ภาพ, Dropout 0.5, 8 Epochs | 51.65% |
-| ทดลอง Learning Rate | Training 8,000 ภาพ, LR 0.003, 8 Epochs | 54.60% |
-| Baseline ชุดขยาย | Training 40,000 ภาพ, 8 Epochs | 70.31% |
-| ทดลองตัด Dropout | Dropout 0.0, Training 40,000 ภาพ, 15 Epochs | 75.15% |
-| ทดลองตัด Weight Decay | Weight decay 0.0, Training 40,000 ภาพ, 15 Epochs | 74.29% |
-| รอบที่ใช้เลือก Checkpoint | Dropout 0.25, LR 0.001, WD 0.0001, Training 40,000 ภาพ, 15 Epochs | 72.83% |
+| การทดลอง | Dropout | Weight decay | Train accuracy | Validation accuracy | Train–validation gap |
+|---|---:|---:|---:|---:|---:|
+| Baseline | 0.25 | 0.0001 | 72.77% | 73.97% | -1.20 pp |
+| ปิด Weight decay | 0.25 | 0.0 | 72.66% | 73.81% | -1.15 pp |
+| ปิด Dropout | 0.0 | 0.0001 | 74.55% | 75.25% | -0.70 pp |
 
-การทดลองชุดแรกใช้ Training 8,000 ภาพ ส่วนการทดลองชุดหลังใช้ 40,000 ภาพ จึงไม่สามารถใช้เปรียบเทียบเพื่อสรุปผลของ Hyperparameter เพียงตัวเดียวได้โดยตรง
+*Train–validation gap คำนวณจาก Training accuracy − Validation accuracy โดย pp หมายถึง Percentage points*
 
-การฝึกอีกหนึ่งรอบจำนวน 15 Epochs เคยได้ Validation Accuracy 76.17% ใน Epoch 12 แต่ไม่ได้บันทึกน้ำหนักของ Epoch นั้นไว้ จึงไม่ได้นำมาใช้ประเมิน Test รอบสุดท้าย Checkpoint ที่เลือกใช้ในโครงงานนี้มาจากการฝึกรอบถัดมา ซึ่งได้ Validation Accuracy สูงสุด 72.83% ใน Epoch 15
+โมเดลที่ปิด Dropout ได้ Validation accuracy สูงที่สุดในบรรดาการทดลองที่ทำ โดยมีค่า **75.25%** ส่วนการปิด Weight Decay ให้ผล Validation accuracy ต่ำกว่า Baseline เล็กน้อย
 
-ผลจากการทดลอง Dropout และ Weight Decay แตกต่างกัน แต่แต่ละการตั้งค่าทดลองเพียงรอบเดียว จึงควรทดลองเพิ่มเติมภายใต้เงื่อนไขเดียวกันก่อนสรุปว่าการตั้งค่าใดให้ผลดีกว่าอย่างสม่ำเสมอ
+ผลนี้สรุปได้เฉพาะการตั้งค่าที่ทดลองในโครงงานนี้ ไม่ได้หมายความว่าการปิด Dropout จะช่วยให้ CNN ทุกโมเดลมีประสิทธิภาพดีขึ้น
 
-#### 5.2 ผลการประเมินด้วย Test Set
+### 9. ผลการประเมินบนชุดข้อมูลทดสอบ
 
-นำ Checkpoint ที่เลือกไปประเมินด้วยชุด Test อย่างเป็นทางการของ CIFAR-10
+โมเดลที่เลือกจากผล Validation ถูกนำไปประเมินด้วยชุดข้อมูล Test อย่างเป็นทางการของ CIFAR-10
 
 | ตัวชี้วัด | ผลลัพธ์ |
 |---|---:|
-| Best Validation Accuracy | 72.83% |
-| **Final Test Accuracy** | **72.49%** |
-| Final Test Loss | 0.785 |
-| Majority-class Baseline Accuracy | 10.00% |
+| Test loss | 0.736 |
+| Test accuracy | 74.73% |
+| Majority-class baseline accuracy | 10.00% |
+| เป้าหมาย Test accuracy | มากกว่า 65% |
+| ผ่านเป้าหมาย | ผ่าน |
 
-โมเดลได้ **Test Accuracy 72.49%** สูงกว่าเป้าหมายของโครงงานที่กำหนดไว้มากกว่า 65% โดยมีค่า Test Accuracy ต่ำกว่า Best Validation Accuracy อยู่ 0.34 จุดเปอร์เซ็นต์
+โมเดลสุดท้ายมี **Test accuracy เท่ากับ 74.73%** ซึ่งสูงกว่าเป้าหมายที่กำหนดไว้ที่ 65%
 
-Majority-class Baseline ได้ Accuracy 10.00% เนื่องจาก CIFAR-10 มี 10 คลาสที่มีจำนวนข้อมูลเท่ากัน จึงใช้การทำนายคลาสเดียวเป็นเกณฑ์เปรียบเทียบพื้นฐานได้
+Majority-class baseline เป็นวิธีพื้นฐานที่ทำนายทุกภาพให้เป็นคลาสเดียวกัน เนื่องจาก CIFAR-10 มีจำนวนภาพเท่ากันในแต่ละคลาส วิธีนี้จึงมี Accuracy เท่ากับ 10%
 
-#### 5.3 Recall รายคลาสและการวิเคราะห์ข้อผิดพลาด
+### 10. ไฟล์โมเดลที่บันทึกไว้
 
-ค่า Recall ต่อไปนี้คำนวณจากชุด Validation
+หลังจากฝึกโมเดลแล้ว สามารถบันทึกไฟล์ต่อไปนี้ได้
 
-| คลาส | Validation Recall |
-|---|---:|
-| Frog (กบ) | 89.44% |
-| Automobile (รถยนต์) | 89.13% |
-| Ship (เรือ) | 84.74% |
-| Horse (ม้า) | 82.61% |
-| Truck (รถบรรทุก) | 80.81% |
-| Airplane (เครื่องบิน) | 76.68% |
-| Dog (สุนัข) | 67.78% |
-| Deer (กวาง) | 58.79% |
-| Bird (นก) | 57.91% |
-| Cat (แมว) | 40.29% |
+| ไฟล์ | รายละเอียด |
+|---|---|
+| `best_model.pth` | น้ำหนักของโมเดลที่ฝึกแล้ว |
+| `best_model_config.json` | การตั้งค่าโมเดลและค่าผลการทดลองที่บันทึกไว้ |
 
-โมเดลทำได้ดีที่สุดในคลาส Frog และ Automobile ส่วน Cat มี Recall ต่ำที่สุด รองลงมาคือ Bird และ Deer
+คำสั่งบันทึกน้ำหนักโมเดล:
 
-จาก Confusion Matrix พบว่าภาพ Cat ถูกจำแนกเป็น Dog จำนวน 269 ภาพ และ Frog จำนวน 165 ภาพ ส่วนภาพ Deer บางส่วนถูกจำแนกเป็น Frog จำนวน 125 ภาพ และ Horse จำนวน 109 ภาพ ผลนี้แสดงให้เห็นว่าโมเดลยังแยกบางคลาสที่มีลักษณะภาพคล้ายกันได้ไม่ดีนัก
+```python
+torch.save(model_exp2.state_dict(), "best_model.pth")
+```
 
-การเพิ่ม Convolutional Layers หรือปรับปรุงการสกัดคุณลักษณะของภาพอาจช่วยแก้ปัญหานี้ได้
+ไฟล์ Configuration สามารถบันทึกแยกเป็น JSON ได้ หากต้องการให้ผู้อื่นดาวน์โหลดไฟล์เหล่านี้ ต้องอัปโหลดไปยัง GitHub หรือส่งแยกต่างหาก การบันทึกไฟล์ไว้ใน Colab ไม่ได้ทำให้ไฟล์ปรากฏใน GitHub โดยอัตโนมัติ
 
-**หมายเหตุ:** ค่า Recall และตัวอย่างข้อผิดพลาดข้างต้นมาจากชุด Validation ไม่ใช่ชุด Test อย่างเป็นทางการ
+เมื่อต้องการโหลดโมเดล ให้สร้าง CNN ที่มีสถาปัตยกรรมและการตั้งค่าเดียวกับโมเดลเดิมก่อน แล้วจึงโหลดน้ำหนัก:
 
-### 6. สถานะโครงงาน
+```python
+model = CNN(n_classes=10, p_drop=0.0)
+model.load_state_dict(
+    torch.load("best_model.pth", map_location=device)
+)
+model = model.to(device)
+model.eval()
+```
 
-- [x] สร้าง GitHub Repository
-- [x] เตรียมและสำรวจชุดข้อมูล CIFAR-10
-- [x] สร้างและฝึกสอน CNN Baseline
-- [x] ทดลองปรับ Hyperparameters
-- [x] เลือก Checkpoint ด้วย Validation Accuracy
-- [x] ประเมิน Checkpoint ด้วยชุด Test อย่างเป็นทางการ
-- [x] บันทึกผลการประเมินและวิเคราะห์ข้อผิดพลาดจาก Validation
-- [ ] จัดทำรายงาน PDF ฉบับสมบูรณ์
-- [ ] จัดทำการสาธิตหรือวิดีโอโครงงาน
-- [ ] ตรวจสอบไฟล์และคำแนะนำการใช้งานใน Repository
+ตัวแปร `device` ต้องกำหนดให้เป็นอุปกรณ์ที่ใช้รัน เช่น GPU หรือ CPU
 
-### 7. การทำซ้ำการทดลอง
+### 11. การทำซ้ำการทดลอง
 
-โครงงานพัฒนาด้วย Python, PyTorch และ torchvision บน Google Colab
+ขั้นตอนสำหรับทดลองซ้ำมีดังนี้
 
-#### ขั้นตอนการใช้งาน
+1. เปิด Notebook ใน Google Colab หรือสภาพแวดล้อม Python อื่น
+2. ติดตั้ง PyTorch และ Torchvision หากยังไม่มี
+3. กำหนด Random seed เป็น `0`
+4. รันเซลล์ใน Notebook ตามลำดับ
+5. ใช้การแบ่งข้อมูล การเตรียมข้อมูล สถาปัตยกรรมโมเดล และการตั้งค่าการฝึกแบบเดียวกัน
+6. บันทึกน้ำหนักและ Configuration หากต้องการนำโมเดลกลับมาใช้ภายหลัง
 
-1. เปิด Notebook ของโครงงานใน Google Colab
-2. รันเซลล์สำหรับเตรียมชุดข้อมูลและ Preprocessing
-3. ฝึกสอน CNN ตามการตั้งค่าที่ระบุ
-4. เปรียบเทียบผลการทดลองด้วยชุด Validation
-5. โหลด Checkpoint ที่เลือก
-6. ประเมินโมเดลด้วยชุด Test อย่างเป็นทางการ
+ผลลัพธ์อาจแตกต่างกันเล็กน้อยตาม GPU และเวอร์ชันของซอฟต์แวร์ที่ใช้
 
-สามารถดาวน์โหลด CIFAR-10 ผ่าน `torchvision.datasets.CIFAR10` ได้โดยอัตโนมัติ
+### 12. สถานะโครงงาน
 
-Notebook ประกอบด้วยโค้ดประกาศโมเดล การแบ่งข้อมูล การฝึกสอน ฟังก์ชันประเมินผล และการสร้างกราฟ หากต้องการทำซ้ำการทดลอง ควรใช้ Data Split, Random Seed, Model Configuration และ Training Settings เดียวกัน อย่างไรก็ตาม การทำงานบน GPU และการสุ่มบางส่วนอาจทำให้ผลต่างกันเล็กน้อยระหว่างรอบ
-
-ไฟล์ `best_model.pth` เก็บน้ำหนักของโมเดลที่เลือก ต้องโหลดเข้ากับ CNN Architecture ที่ตรงกันก่อนนำไปประเมินผลหรือทำนายภาพ
-
-ควรตรวจสอบว่า Notebook และ Checkpoint พร้อมใช้งานใน Repository หรือมีลิงก์ดาวน์โหลดที่ระบุไว้ชัดเจน เพราะไฟล์ที่บันทึกใน Colab Runtime จะไม่สามารถเข้าถึงได้โดยผู้ใช้อื่นโดยอัตโนมัติ
-
-### 8. ข้อจำกัดและแนวทางพัฒนาต่อ
-
-- CNN มีสถาปัตยกรรมค่อนข้างเรียบง่ายและยังจำแนกบางคลาสที่คล้ายกันได้ไม่ดี
-- Cat, Bird และ Deer มี Validation Recall ต่ำกว่าคลาสอื่น
-- การทดลองชุดแรกและชุดขยายใช้จำนวนภาพ Training ต่างกัน จึงเปรียบเทียบผลโดยตรงได้จำกัด
-- การตั้งค่าส่วนใหญ่ทดลองเพียงรอบเดียว
-- ยังไม่ได้เปรียบเทียบกับ CNN ที่มีสถาปัตยกรรมลึกกว่า
-
-การทดลองในอนาคตอาจเพิ่ม Batch Normalization และ Convolutional Blocks ใช้ Learning-rate Scheduling เปรียบเทียบ Regularization ภายใต้ Data Split เดียวกัน และทดลองซ้ำด้วยหลาย Random Seeds เพื่อดูว่าผลที่ได้มีความสม่ำเสมอหรือไม่
-
----
-
-**Author:** AkanoFah  
-**Project:** Deep Learning Capstone: Image Classification with CNN on CIFAR-10
+- [x] โหลดและเตรียมชุดข้อมูล CIFAR-10
+- [x] สร้างสถาปัตยกรรม CNN
+- [x] ฝึกโมเดล Baseline
+- [x] ทดลองปรับ Weight Decay และ Dropout
+- [x] เลือกโมเดลจากผล Validation
+- [x] ประเมินโมเดลที่เลือกด้วยชุดข้อมูล Test
+- [x] ทำ Test accuracy ได้สูงกว่าเป้าหมาย 65%
+- [ ] อัปโหลดไฟล์โมเดลไปยัง GitHub หากต้องการเผยแพร่
+- [ ] จัดทำรายงานฉบับสมบูรณ์และสาธิตโครงงาน หากเป็นข้อกำหนดของงาน
